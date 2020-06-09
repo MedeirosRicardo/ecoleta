@@ -14,17 +14,20 @@ interface Item {
   image_url: string;
 }
 
-// https://stackoverflow.com/questions/45498178/react-js-typescript-string-array-variable
-interface APIStateResponse {
-  definitions: [{
-    term: string;
-    description: string;
-  }];
+interface State {
+  term: string;
+  description: string;
 }
+
+interface States extends Array<State> {
+  [x: string]: any;
+  definitions: any;
+}
+
 
 const CreatePoint = () => {
   const [items, setItems] = useState<Item[]>([]);
-  const [states, setStates] = useState<APIStateResponse[]>([]);
+  const [states, setStates] = useState<States[]>([]);
 
   useEffect(() => {
     api.get('items').then(response => {
@@ -33,17 +36,18 @@ const CreatePoint = () => {
   }, []);
 
   useEffect(() => {
-    axios.get<APIStateResponse>('http://geogratis.gc.ca/services/geoname/en/codes/province.json').then(response => {
-      const stateResponse = response.data.definitions.map(state => (
+    axios.get<States>('http://geogratis.gc.ca/services/geoname/en/codes/province.json').then(response => {
+      const result = response.data.definitions.map((state: { term: any; description: any; }) => (
         {
           term: state.term,
           description: state.description
         }
       ));
-      setStates(stateResponse);
+      const sorted = result.splice(0,13).sort((a: States, b: States) => a.description > b.description ? 1 : -1);
+      setStates(sorted);
     });
   }, []);
-
+  
   return (
     <div id="page-create-point">
       <header>
@@ -111,9 +115,12 @@ const CreatePoint = () => {
             <div className="field">
               <label htmlFor="state">Province</label>
               <select name="state" id="state">
-                {states.map((state: APIStateResponse, index) => (
-                  <option key={index} value={state[index]}>{`${state.term}: ${state.description}`}</option>
+                <option value="0">Select a Province</option>
+                {states.map(state => (
+                  <option key={state.term} value={state.term}>{state.description}</option>
                 ))}
+                
+
               </select>
             </div>
             <div className="field">
