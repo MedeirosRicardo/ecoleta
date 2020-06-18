@@ -102,7 +102,7 @@ const CreatePoint = () => {
 
   useEffect(() => {
     if (selectedState === '0') return;
-    axios.get<Cities>(`http://geogratis.gc.ca/services/geoname/en/geonames.json?province=${selectedState}&concise=CITY&concise=TOWN`).then(response => {
+    axios.get<Cities>(`http://geogratis.gc.ca/services/geoname/en/geonames.json?province=${selectedState}&concise=CITY&concise=TOWN&concise=UNP`).then(response => {
       const cityNames = response.data.items.map((city: City) => (
         {
           id: city.id,
@@ -134,7 +134,7 @@ const CreatePoint = () => {
     event.preventDefault();
 
     const { name, email, phone} = formData;
-    const state = selectedState;
+    const state = selectedState[0];
     const city = selectedCity;
     const [latitude, longitude] = selectedPosition;
     const items = selectedItems;
@@ -240,7 +240,7 @@ const CreatePoint = () => {
               >
                 <option value="0">Select a Province</option>
                 {states.map(state => (
-                  <option key={state.term} value={state.code}>{state.description}</option>
+                  <option key={state.code} value={[state.code, state.term]}>{state.description}</option>
                 ))}
 
 
