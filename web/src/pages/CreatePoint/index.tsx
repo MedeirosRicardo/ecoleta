@@ -173,7 +173,7 @@ const CreatePoint = () => {
       </header>
 
       <form onSubmit={handleSubmit}>
-        <h1>Register a Point of Collection</h1>
+        <h1>Point of Collection Registration</h1>
 
         <Dropzone onFileUploaded={setSelectedFile} />
 
