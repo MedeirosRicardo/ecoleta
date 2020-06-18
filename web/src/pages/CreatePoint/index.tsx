@@ -118,7 +118,7 @@ const CreatePoint = () => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   }
-
+  
   function handleSelectItem(id: number) {
     const alreadySelected = selectedItems.findIndex(item => item === id);
 
@@ -134,7 +134,7 @@ const CreatePoint = () => {
     event.preventDefault();
 
     const { name, email, phone} = formData;
-    const state = selectedState[0];
+    const state = selectedState.split(',')[1];
     const city = selectedCity;
     const [latitude, longitude] = selectedPosition;
     const items = selectedItems;
